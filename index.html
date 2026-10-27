@@ -58,19 +58,22 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* الواجهة الافتتاحية الجديدة المعتمدة على الصورة تماماً مع التفاعل للنقر */
+        /* الواجهة الافتتاحية: الصورة كاملة غير مقصوصة مع الكلمة في المكان المحدد تماماً */
         /* ------------------------------------------------------------- */
         .landing-hero-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: url('https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg') no-repeat center center;
+            background-color: #000000;
+            background-image: url('https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg');
+            background-repeat: no-repeat;
+            background-position: center bottom; /* ضبط التموضع لضمان ظهور اليد والكرة بشكل كامل متناسق */
             background-size: cover;
             z-index: 3000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 50px 20px;
+            padding: 60px 20px;
             cursor: pointer;
             transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
         }
@@ -81,15 +84,15 @@
             pointer-events: none;
         }
 
-        /* كلمة MEROS Platform في المساحة العلوية المحددة فوق الكرة تماماً */
+        /* كلمة MEROS Platform في الفراغ العلوي تماماً كما حددت في الدائرة */
         .hero-title-top {
             font-family: var(--font-instrument-serif);
-            font-size: 3.2rem;
+            font-size: 3.4rem;
             font-weight: 400;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: #ffffff;
             text-align: center;
-            text-shadow: 0 2px 25px rgba(251, 133, 0, 0.6);
+            text-shadow: 0 2px 30px rgba(251, 133, 0, 0.8);
             margin-top: 10px;
             user-select: none;
         }
@@ -928,7 +931,7 @@
 </head>
 <body>
 
-    <!-- الواجهة الافتتاحية المصممة بالصورة، بمجرد النقر عليها تحولك للمنظومة -->
+    <!-- الواجهة الافتتاحية بالصورة الكاملة والنقر للانتقال للمنظومة -->
     <div class="landing-hero-overlay" id="landingHero" onclick="enterPlatform()">
         <h1 class="hero-title-top">MEROS <span>Platform</span></h1>
     </div>
