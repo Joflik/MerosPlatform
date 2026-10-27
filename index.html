@@ -58,7 +58,7 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* الواجهة الافتتاحية: الصورة كاملة غير مقصوصة مع الكلمة في المكان المحدد تماماً */
+        /* الواجهة الافتتاحية بالصورة الكاملة والنقر للانتقال للمنظومة */
         /* ------------------------------------------------------------- */
         .landing-hero-overlay {
             position: fixed;
@@ -66,7 +66,7 @@
             background-color: #000000;
             background-image: url('https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg');
             background-repeat: no-repeat;
-            background-position: center bottom; /* ضبط التموضع لضمان ظهور اليد والكرة بشكل كامل متناسق */
+            background-position: center bottom;
             background-size: cover;
             z-index: 3000;
             display: flex;
@@ -84,7 +84,6 @@
             pointer-events: none;
         }
 
-        /* كلمة MEROS Platform في الفراغ العلوي تماماً كما حددت في الدائرة */
         .hero-title-top {
             font-family: var(--font-instrument-serif);
             font-size: 3.4rem;
@@ -376,13 +375,15 @@
         }
 
         .about-card-item.active .toggle-box,
-        .accordion-item.active .toggle-box {
+        .accordion-item.active .toggle-box,
+        .ai-tool-card.active .toggle-box {
             background-color: #163b52;
             box-shadow: 0 0 15px rgba(27, 73, 101, 0.5);
         }
 
         .about-card-item.active .toggle-box i,
-        .accordion-item.active .toggle-box i {
+        .accordion-item.active .toggle-box i,
+        .ai-tool-card.active .toggle-box i {
             transform: rotate(135deg);
         }
 
@@ -393,7 +394,8 @@
         }
 
         .about-card-item.active .accordion-content,
-        .accordion-item.active .accordion-content {
+        .accordion-item.active .accordion-content,
+        .ai-tool-card.active .accordion-content {
             grid-template-rows: 1fr;
         }
 
@@ -413,7 +415,8 @@
         }
 
         .about-card-item.active .content-inner,
-        .accordion-item.active .content-inner {
+        .accordion-item.active .content-inner,
+        .ai-tool-card.active .content-inner {
             transform: translateY(0);
             opacity: 1;
             visibility: visible;
@@ -562,16 +565,18 @@
         .dynamic-list {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 12px;
             margin-top: 6px;
         }
 
         .accordion-item {
             background: transparent;
             border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.3s ease;
         }
 
-        .accordion-item.hidden {
+        .accordion-item.hidden,
+        .ai-tool-card.hidden {
             display: none !important;
         }
 
@@ -588,8 +593,76 @@
         .marketer-title-area {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* تعديل قسم الأدوات التشغيلية حصرياً: تدرج متحرك ورموز ASCII أطراف البطاقة */
+        /* ------------------------------------------------------------- */
+        .ai-tool-card {
+            position: relative;
+            background: rgba(13, 15, 18, 0.9);
+            border-radius: 16px;
+            padding: 2px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border-bottom: none !important;
+        }
+
+        .ai-tool-card::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background: conic-gradient(from 0deg at 50% 50%, var(--card-glow-1, #62b6cb), var(--card-glow-2, #1b4965), var(--card-glow-1, #62b6cb));
+            animation: rotateGlow 6s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ai-tool-inner {
+            position: relative;
+            background: #000000;
+            border-radius: 15px;
+            padding: 4px 16px 4px 4px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-tool-card::after {
+            content: "+ - * / # & $ % 01 10 AI CLD GPT MID";
+            position: absolute;
+            top: 4px; left: 10px; right: 10px; bottom: 4px;
+            font-family: monospace;
+            font-size: 0.55rem;
+            color: var(--card-glow-1, #62b6cb);
+            opacity: 0.05;
+            white-space: nowrap;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 2;
+            animation: asciiScroll 12s linear infinite;
+        }
+
+        @keyframes asciiScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* تنسيق أيقونة الموقع الديناميكية في بطاقات الأدوات */
+        .site-favicon {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px;
+            border: 1px solid var(--card-border);
         }
 
         .marketer-title-only {
@@ -772,6 +845,37 @@
             font-size: 1.2rem;
             font-weight: 900;
             color: var(--text-main);
+        }
+
+        /* شريط أدوات البيانات (تصدير واستيراد) */
+        .data-sync-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .sync-action-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .sync-action-btn:hover {
+            border-color: var(--accent-blue-bright);
+            background: rgba(27, 73, 101, 0.15);
         }
 
         /* النوافذ المنبثقة والمودلز */
@@ -1137,7 +1241,7 @@
             <header>
                 <div class="header-title">
                     <h1>الأدوات التشغيلية</h1>
-                    <p>إدارة اشتراكات أدوات الذكاء الاصطناعي وتكاليفها التشغيلية</p>
+                    <p>إدارة اشتراكات أدوات الذكاء الاصطناعي وتكاليفها التشغيلية مع الهوية التلقائية</p>
                 </div>
             </header>
 
@@ -1204,6 +1308,20 @@
                         <span class="bar-label">العائد الاستثماري</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- شريط تصدير واستيراد ومزامنة البيانات المحليه -->
+            <div class="data-sync-bar">
+                <button class="sync-action-btn" onclick="exportDataJson()">
+                    <i class="fa-solid fa-download"></i> تصدير البيانات
+                </button>
+                <button class="sync-action-btn" onclick="document.getElementById('importFileJson').click()">
+                    <i class="fa-solid fa-upload"></i> استيراد البيانات
+                </button>
+                <input type="file" id="importFileJson" style="display:none" accept=".json" onchange="importDataJson(event)">
+                <button class="sync-action-btn" onclick="syncDataLocally()">
+                    <i class="fa-solid fa-rotate"></i> مزامنة محلية
+                </button>
             </div>
         </div>
 
@@ -1336,8 +1454,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>رابط موقع الأداة (URL)</label>
-                    <input type="url" id="inputToolUrl" placeholder="https://example.com" required>
+                    <label>رابط موقع الأداة (URL) لجلب الأيقونة والهوية تلقائياً</label>
+                    <input type="url" id="inputToolUrl" placeholder="https://chatgpt.com" required>
                 </div>
                 <button type="submit" class="submit-btn">حفظ الأداة</button>
             </form>
@@ -1386,7 +1504,7 @@
                 duration: "شهري",
                 date: "2026/05/01",
                 status: "active",
-                url: "https://chat.openai.com"
+                url: "https://chatgpt.com"
             },
             {
                 id: 2,
@@ -1408,6 +1526,55 @@
 
         function saveToolsToStorage() {
             localStorage.setItem('meros_tools', JSON.stringify(operationalTools));
+        }
+
+        // دوال التصدير والاستيراد والمزامنة المحلية
+        function exportDataJson() {
+            const dataToExport = {
+                marketers: marketers,
+                operationalTools: operationalTools,
+                exportDate: new Date().toISOString()
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `meros_platform_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importDataJson(event) {
+            const fileReader = new FileReader();
+            if(event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = function(e) {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        if(imported.marketers && imported.operationalTools) {
+                            marketers = imported.marketers;
+                            operationalTools = imported.operationalTools;
+                            saveMarketersToStorage();
+                            saveToolsToStorage();
+                            buildMarketersDOM();
+                            buildToolsDOM();
+                            updateBudgetSummary();
+                            alert('تم استيراد البيانات بنجاح وتحديث المنظومة!');
+                        } else {
+                            alert('ملف النسخة الاحتياطية غير صالح.');
+                        }
+                    } catch (err) {
+                        alert('حدث خطأ أثناء قراءة ملف الـ JSON.');
+                    }
+                }
+            }
+        }
+
+        function syncDataLocally() {
+            saveMarketersToStorage();
+            saveToolsToStorage();
+            updateBudgetSummary();
+            alert('تمت مزامنة وحفظ البيانات محلياً بنجاح!');
         }
 
         let selectedFilterValue = 'all';
@@ -1563,47 +1730,79 @@
             document.getElementById('footerCounter').textContent = `إجمالي المسوقين: ${marketers.length}`;
         }
 
+        // استخراج النطاق (Domain) لجلب الـ Favicon والهوية البصرية تلقائياً
+        function getDomainFromUrl(url) {
+            try {
+                const parsed = new URL(url.startsWith('http') ? url : 'https://' + url);
+                return parsed.hostname;
+            } catch (e) {
+                return 'example.com';
+            }
+        }
+
+        /* دالة تحديد ألوان التدرج المتحرك حسب هوية كل أداة AI */
+        function getBrandGlowColors(name, url) {
+            const lower = (name + " " + url).toLowerCase();
+            if (lower.includes('claude') || lower.includes('anthropic')) {
+                return { c1: '#ff7b00', c2: '#ffcc00' }; // برتقالي وأصفر لـ Claude
+            } else if (lower.includes('chatgpt') || lower.includes('openai')) {
+                return { c1: '#10a37f', c2: '#ffffff' }; // أخضر وأبيض لـ OpenAI
+            } else if (lower.includes('midjourney')) {
+                return { c1: '#2255ff', c2: '#9933ff' }; // أزرق وبنفسجي لـ Midjourney
+            } else if (lower.includes('github') || lower.includes('copilot')) {
+                return { c1: '#f0f6fc', c2: '#8957e5' }; // أبيض وبنفسجي لـ GitHub
+            } else {
+                return { c1: '#62b6cb', c2: '#1b4965' }; // افتراضي (سماوي وأزرق)
+            }
+        }
+
         function buildToolsDOM() {
             const container = document.getElementById('toolsContainer');
             container.innerHTML = operationalTools.map(t => {
                 const isActive = t.status === 'active';
                 const displayName = t.name ? t.name : 'أداة جديدة';
+                const domain = getDomainFromUrl(t.url);
+                const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                const colors = getBrandGlowColors(t.name, t.url);
                 
                 return `
-                    <div class="accordion-item" id="tool-item-${t.id}" data-name="${displayName.toLowerCase()}">
-                        <div class="accordion-header" onclick="toggleAccordion(${t.id}, 'tool')">
-                            <div class="marketer-title-area">
-                                <div class="marketer-title-only">${displayName}</div>
-                                <span class="status-badge ${isActive ? 'active' : 'inactive'}">
-                                    <span class="status-dot"></span>
-                                    ${isActive ? 'نشط' : 'غير نشط'}
-                                </span>
+                    <div class="ai-tool-card" id="tool-item-${t.id}" style="--card-glow-1: ${colors.c1}; --card-glow-2: ${colors.c2};" data-name="${displayName.toLowerCase()}">
+                        <div class="ai-tool-inner">
+                            <div class="accordion-header" onclick="toggleAccordion(${t.id}, 'tool')">
+                                <div class="marketer-title-area">
+                                    <img src="${faviconUrl}" class="site-favicon" alt="icon" onerror="this.src='https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg'">
+                                    <div class="marketer-title-only">${displayName}</div>
+                                    <span class="status-badge ${isActive ? 'active' : 'inactive'}">
+                                        <span class="status-dot"></span>
+                                        ${isActive ? 'نشط' : 'غير نشط'}
+                                    </span>
+                                </div>
+                                <div class="toggle-box" style="width:36px; height:36px; border-radius:8px;"><i class="fa-solid fa-plus" style="font-size:0.9rem;"></i></div>
                             </div>
-                            <div class="toggle-box"><i class="fa-solid fa-plus"></i></div>
-                        </div>
-                        <div class="accordion-content">
-                            <div class="content-overflow">
-                                <div class="content-inner">
-                                    <div class="detail-row">
-                                        <span class="detail-label">سعر الاشتراك / التكلفة:</span>
-                                        <span class="detail-value">${t.cost}</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <span class="detail-label">مدة الاشتراك:</span>
-                                        <span class="deal-badge fixed">${t.duration}</span>
-                                    </div>
-                                    <div class="detail-row">
-                                        <span class="detail-label">تاريخ التجديد / الاشتراك:</span>
-                                        <span class="detail-value">${t.date}</span>
-                                    </div>
-                                    <div>
-                                        <div class="section-title">رابط موقع الأداة:</div>
-                                        <div class="links-wrap">
-                                            <a href="${t.url}" target="_blank" class="link-chip" style="color:var(--accent-blue-bright);"><i class="fa-solid fa-link"></i><span>زيارة الموقع الإلكتروني</span></a>
+                            <div class="accordion-content">
+                                <div class="content-overflow">
+                                    <div class="content-inner">
+                                        <div class="detail-row">
+                                            <span class="detail-label">سعر الاشتراك / التكلفة:</span>
+                                            <span class="detail-value">${t.cost}</span>
                                         </div>
-                                    </div>
-                                    <div class="actions-row">
-                                        <button class="delete-btn" onclick="deleteTool(event, ${t.id})"><i class="fa-regular fa-trash-can"></i> حذف الأداة</button>
+                                        <div class="detail-row">
+                                            <span class="detail-label">مدة الاشتراك:</span>
+                                            <span class="deal-badge fixed">${t.duration}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="detail-label">تاريخ التجديد / الاشتراك:</span>
+                                            <span class="detail-value">${t.date}</span>
+                                        </div>
+                                        <div>
+                                            <div class="section-title">رابط موقع الأداة:</div>
+                                            <div class="links-wrap">
+                                                <a href="${t.url}" target="_blank" class="link-chip" style="color:var(--accent-blue-bright);"><i class="fa-solid fa-link"></i><span>زيارة موقع ${domain}</span></a>
+                                            </div>
+                                        </div>
+                                        <div class="actions-row">
+                                            <button class="delete-btn" onclick="deleteTool(event, ${t.id})"><i class="fa-regular fa-trash-can"></i> حذف الأداة</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1638,7 +1837,7 @@
 
         function filterToolsList() {
             const searchVal = document.getElementById('searchToolInput').value.toLowerCase();
-            const items = document.querySelectorAll('#toolsContainer .accordion-item');
+            const items = document.querySelectorAll('#toolsContainer .ai-tool-card');
             let visibleCount = 0;
 
             items.forEach(item => {
@@ -1744,7 +1943,7 @@
                 duration: document.getElementById('inputToolDuration').value.trim() || "شهري",
                 date: document.getElementById('inputToolDate').value.trim() || "2026/05/01",
                 status: document.getElementById('inputToolStatus').value,
-                url: document.getElementById('inputToolUrl').value.trim() || "#"
+                url: document.getElementById('inputToolUrl').value.trim() || "https://example.com"
             };
             operationalTools.unshift(newTool);
             saveToolsToStorage();
