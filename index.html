@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة إدارة المسوقين - MEROS</title>
+    <title>MEROS Platform - بوابة المنظومة الفخمة</title>
     <!-- خط ثمانية وتصميم الخطوط -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,600;1,400&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -35,6 +35,7 @@
             --danger-red: #ef4444;
             --danger-bg: rgba(239, 68, 68, 0.1);
             --nav-bg: rgba(10, 10, 12, 0.95);
+            --font-instrument-serif: "Instrument Serif", Georgia, serif;
             --font-family-base: 'Thmanyah Serif', 'Tajawal', sans-serif;
         }
 
@@ -57,7 +58,49 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* الهيدر العلوي والقائمة الرئيسية المنبثقة */
+        /* الواجهة الافتتاحية الجديدة المعتمدة على الصورة تماماً مع التفاعل للنقر */
+        /* ------------------------------------------------------------- */
+        .landing-hero-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 50px 20px;
+            cursor: pointer;
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+        }
+
+        .landing-hero-overlay.hidden-hero {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* كلمة MEROS Platform في المساحة العلوية المحددة فوق الكرة تماماً */
+        .hero-title-top {
+            font-family: var(--font-instrument-serif);
+            font-size: 3.2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 0 2px 25px rgba(251, 133, 0, 0.6);
+            margin-top: 10px;
+            user-select: none;
+        }
+
+        .hero-title-top span {
+            color: #ffb703;
+            font-style: italic;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* الهيدر العلوي والقائمة الرئيسية للمنظومة */
         /* ------------------------------------------------------------- */
         .site-header {
             position: fixed;
@@ -203,9 +246,7 @@
             transform: translateX(-10px);
         }
 
-        /* ------------------------------------------------------------- */
-        /* تصميم الحاوية الرئيسية للأقسام */
-        /* ------------------------------------------------------------- */
+        /* الحاوية الرئيسية والأقسام */
         .container {
             width: 100%;
             max-width: 520px;
@@ -214,14 +255,23 @@
             gap: 16px;
         }
 
+        .app-section {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .app-section.active {
+            display: flex;
+        }
+
         /* قسم 01: الرئيسية */
         .about-section {
             display: none;
             flex-direction: column;
             gap: 36px;
-            animation: fadeIn 0.3s ease-in-out;
         }
-
         .about-section.active {
             display: flex;
         }
@@ -421,17 +471,10 @@
         .bar-label {
             font-size: 0.75rem;
             color: var(--text-sub);
+            text-align: center;
         }
 
-        /* ------------------------------------------------------------- */
-        /* قسم المسوقين والتحكم */
-        /* ------------------------------------------------------------- */
-        .marketers-view {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
+        /* تنسيقات الأقسام المشتركة */
         header {
             padding: 8px 4px;
             text-align: center;
@@ -513,7 +556,7 @@
             color: var(--accent-blue-bright);
         }
 
-        .marketers-list {
+        .dynamic-list {
             display: flex;
             flex-direction: column;
             gap: 2px;
@@ -554,7 +597,6 @@
             letter-spacing: -0.3px;
         }
 
-        /* شارة حالة المسوق */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -640,13 +682,13 @@
             margin-bottom: 8px;
         }
 
-        .social-links {
+        .social-links, .links-wrap {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
 
-        .social-chip {
+        .social-chip, .link-chip {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -661,7 +703,7 @@
             transition: all 0.2s ease;
         }
 
-        .social-chip:hover {
+        .social-chip:hover, .link-chip:hover {
             border-color: var(--accent-blue-bright);
             transform: translateY(-2px);
         }
@@ -692,6 +734,44 @@
             gap: 6px;
         }
 
+        /* قسم الميزانية */
+        .budget-section {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .budget-section.active {
+            display: flex;
+        }
+
+        .budget-summary-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .summary-card-title {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .summary-card-value {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+
+        /* النوافذ المنبثقة والمودلز */
         .modal-overlay {
             position: fixed;
             top: 0; right: 0; bottom: 0; left: 0;
@@ -848,13 +928,18 @@
 </head>
 <body>
 
-    <!-- الهيدر العلوي والقائمة الرئيسية -->
+    <!-- الواجهة الافتتاحية المصممة بالصورة، بمجرد النقر عليها تحولك للمنظومة -->
+    <div class="landing-hero-overlay" id="landingHero" onclick="enterPlatform()">
+        <h1 class="hero-title-top">MEROS <span>Platform</span></h1>
+    </div>
+
+    <!-- الهيدر العلوي للمنظومة -->
     <header class="site-header">
         <button class="header-icon-btn" onclick="openContactSupport()">
             <i class="fa-regular fa-envelope"></i>
         </button>
 
-        <a href="#" class="header-brand" onclick="showMarketersSection()">
+        <a href="#" class="header-brand" onclick="showSection('marketersView')">
             <i class="fa-solid fa-cube"></i>
             <span>MEROS</span>
         </a>
@@ -864,10 +949,10 @@
         </button>
     </header>
 
-    <!-- القائمة المنبثقة كاملة الشاشة -->
+    <!-- القائمة الرئيسية المكونة من 4 أقسام -->
     <div class="fullscreen-menu" id="fullscreenMenu">
         <div class="menu-items">
-            <div class="menu-item" onclick="closeMainMenu(); showAboutSection();">
+            <div class="menu-item" onclick="closeMainMenu(); showSection('aboutSection');">
                 <div class="menu-item-left">
                     <span class="menu-number">01</span>
                     <span class="menu-text">الرئيسية</span>
@@ -875,7 +960,7 @@
                 <i class="fa-solid fa-arrow-left menu-arrow"></i>
             </div>
 
-            <div class="menu-item" onclick="closeMainMenu(); showMarketersSection();">
+            <div class="menu-item" onclick="closeMainMenu(); showSection('marketersView');">
                 <div class="menu-item-left">
                     <span class="menu-number">02</span>
                     <span class="menu-text">المسوقين</span>
@@ -883,29 +968,29 @@
                 <i class="fa-solid fa-arrow-left menu-arrow"></i>
             </div>
 
-            <div class="menu-item" onclick="closeMainMenu(); showMarketersSection(); openFilterModal();">
+            <div class="menu-item" onclick="closeMainMenu(); showSection('toolsView');">
                 <div class="menu-item-left">
                     <span class="menu-number">03</span>
-                    <span class="menu-text">الآليات</span>
+                    <span class="menu-text">الأدوات التشغيلية</span>
                 </div>
                 <i class="fa-solid fa-arrow-left menu-arrow"></i>
             </div>
 
-            <div class="menu-item" onclick="closeMainMenu(); showMarketersSection(); openAddModal();">
+            <div class="menu-item" onclick="closeMainMenu(); showSection('budgetView');">
                 <div class="menu-item-left">
                     <span class="menu-number">04</span>
-                    <span class="menu-text">إضافة مسوق</span>
+                    <span class="menu-text">الميزانية</span>
                 </div>
                 <i class="fa-solid fa-arrow-left menu-arrow"></i>
             </div>
         </div>
     </div>
 
-    <!-- الحاوية الرئيسية للتطبيق -->
+    <!-- الحاوية الرئيسية للأقسام كاملة -->
     <div class="container">
         
         <!-- قسم 01: الرئيسية -->
-        <div class="about-section" id="aboutSection">
+        <div class="about-section app-section" id="aboutSection">
             <div class="intro-long-article">
                 <h2 class="scroll-reveal-text">معماريّة منظومة MEROS والتشغيل الرقمي المتقدم</h2>
                 <p class="scroll-reveal-text">
@@ -1008,8 +1093,8 @@
             </div>
         </div>
 
-        <!-- قسم 02: إدارة المسوقين -->
-        <div class="marketers-view" id="marketersView">
+        <!-- قسم 02: المسوقين -->
+        <div class="app-section marketers-view active" id="marketersView">
             <header>
                 <div class="header-title">
                     <h1>منظومة المسوقين</h1>
@@ -1040,15 +1125,88 @@
                 </div>
             </div>
 
-            <!-- حاوية المسوقين الثابتة -->
-            <div class="marketers-list" id="marketersContainer"></div>
-
+            <div class="dynamic-list" id="marketersContainer"></div>
             <div class="footer-counter" id="footerCounter">إجمالي المسوقين: 0</div>
+        </div>
+
+        <!-- قسم 03: الأدوات التشغيلية -->
+        <div class="app-section tools-view" id="toolsView">
+            <header>
+                <div class="header-title">
+                    <h1>الأدوات التشغيلية</h1>
+                    <p>إدارة اشتراكات أدوات الذكاء الاصطناعي وتكاليفها التشغيلية</p>
+                </div>
+            </header>
+
+            <div class="controls">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchToolInput" placeholder="ابحث باسم الأداة..." oninput="filterToolsList()">
+                </div>
+
+                <div class="controls-row" style="grid-template-columns: 1fr;">
+                    <button class="control-btn" onclick="openAddToolModal()">
+                        <span>إضافة أداة تشغيلية / AI</span>
+                        <div class="toggle-box" style="width:36px; height:36px; border-radius:8px;">
+                            <i class="fa-solid fa-plus" style="font-size:1rem;"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dynamic-list" id="toolsContainer"></div>
+            <div class="footer-counter" id="toolsFooterCounter">إجمالي الأدوات: 0</div>
+        </div>
+
+        <!-- قسم 04: الميزانية -->
+        <div class="app-section budget-section" id="budgetView">
+            <header>
+                <div class="header-title">
+                    <h1>الميزانية ورأس المال</h1>
+                    <p>تتبع الصرف ورأس المال المخصص للمسوقين والأدوات التشغيلية</p>
+                </div>
+            </header>
+
+            <div class="budget-summary-cards">
+                <div class="summary-card">
+                    <span class="summary-card-title">إجمالي صرف المسوقين</span>
+                    <span class="summary-card-value" id="totalMarketersSpend">0 ريال</span>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-card-title">إجمالي الأدوات والـ AI</span>
+                    <span class="summary-card-value" id="totalToolsSpend">0 ريال</span>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-title">
+                    <i class="fa-solid fa-chart-column"></i>
+                    رسم بياني دقيق لتوزيع ميزانية الصرف ورأس المال
+                </div>
+                <div class="bar-chart" id="budgetBarChart">
+                    <div class="bar-item">
+                        <div class="bar-fill" style="height: 0%;" data-height="65%"></div>
+                        <span class="bar-label">المسوقين</span>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-fill" style="height: 0%;" data-height="45%"></div>
+                        <span class="bar-label">أدوات الـ AI</span>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-fill" style="height: 0%;" data-height="80%"></div>
+                        <span class="bar-label">رأس المال التشغيلي</span>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-fill" style="height: 0%;" data-height="90%"></div>
+                        <span class="bar-label">العائد الاستثماري</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <!-- نافذة التصفية -->
+    <!-- نافذة التصفية للمسوقين -->
     <div class="modal-overlay" id="filterModalOverlay">
         <div class="modal">
             <div class="modal-header">
@@ -1082,10 +1240,10 @@
             <form id="addForm" onsubmit="handleAddMarketer(event)">
                 <div class="form-group">
                     <label>اسم المسوق</label>
-                    <input type="text" id="inputName" placeholder="مثال: عبدالله الشمري">
+                    <input type="text" id="inputName" placeholder="مثال: عبدالله الشمري" required>
                 </div>
                 <div class="form-group">
-                    <label>الصفة / المجال (داخل القائمة)</label>
+                    <label>الصفة / المجال</label>
                     <select id="inputRole">
                         <option value="مؤثر / صانع محتوى">مؤثر / صانع محتوى</option>
                         <option value="مشهور / شخصية عامة">مشهور / شخصية عامة</option>
@@ -1110,8 +1268,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>تفاصيل الاتفاق (مثال: 15% عمولة مبيعات أو 2500 ريال)</label>
-                    <input type="text" id="inputValue" placeholder="مثال: 15% لكل عملية بيع">
+                    <label>تفاصيل الاتفاق</label>
+                    <input type="text" id="inputValue" placeholder="مثال: 15% أو 2500 ريال" required>
                 </div>
 
                 <hr style="border:0; border-top:1px solid var(--card-border); margin: 6px 0;">
@@ -1143,8 +1301,47 @@
         </div>
     </div>
 
+    <!-- نافذة إضافة أداة تشغيلية -->
+    <div class="modal-overlay" id="addToolModalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>إضافة أداة تشغيلية / AI</h3>
+                <button class="close-modal-btn" onclick="closeAddToolModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="addToolForm" onsubmit="handleAddTool(event)">
+                <div class="form-group">
+                    <label>اسم الأداة</label>
+                    <input type="text" id="inputToolName" placeholder="مثال: ChatGPT Plus" required>
+                </div>
+                <div class="form-group">
+                    <label>سعر الأداة / التكلفة</label>
+                    <input type="text" id="inputToolCost" placeholder="مثال: 280 ريال" required>
+                </div>
+                <div class="form-group">
+                    <label>مدة الاشتراك</label>
+                    <input type="text" id="inputToolDuration" placeholder="مثال: شهري / سنوي" required>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الاشتراك / التجديد</label>
+                    <input type="text" id="inputToolDate" placeholder="مثال: 2026/05/01" required>
+                </div>
+                <div class="form-group">
+                    <label>حالة الأداة</label>
+                    <select id="inputToolStatus">
+                        <option value="active">نشط</option>
+                        <option value="inactive">متوقف / منتهي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>رابط موقع الأداة (URL)</label>
+                    <input type="url" id="inputToolUrl" placeholder="https://example.com" required>
+                </div>
+                <button type="submit" class="submit-btn">حفظ الأداة</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // تحميل البيانات المخزنة محلياً إن وجدت، وإلا استخدم البيانات الافتراضية
         let defaultMarketers = [
             {
                 id: 1,
@@ -1178,31 +1375,65 @@
             }
         ];
 
-        let storedData = localStorage.getItem('meros_marketers');
-        let marketers = storedData ? JSON.parse(storedData) : defaultMarketers;
+        let defaultTools = [
+            {
+                id: 1,
+                name: "ChatGPT Plus (OpenAI)",
+                cost: "280 ريال",
+                duration: "شهري",
+                date: "2026/05/01",
+                status: "active",
+                url: "https://chat.openai.com"
+            },
+            {
+                id: 2,
+                name: "Midjourney AI",
+                cost: "112 ريال",
+                duration: "شهري",
+                date: "2026/05/15",
+                status: "active",
+                url: "https://www.midjourney.com"
+            }
+        ];
 
-        // دالة حفظ البيانات في التخزين المحلي
+        let marketers = localStorage.getItem('meros_marketers') ? JSON.parse(localStorage.getItem('meros_marketers')) : defaultMarketers;
+        let operationalTools = localStorage.getItem('meros_tools') ? JSON.parse(localStorage.getItem('meros_tools')) : defaultTools;
+
         function saveMarketersToStorage() {
             localStorage.setItem('meros_marketers', JSON.stringify(marketers));
         }
 
-        let selectedFilterValue = 'all';
-
-        function showAboutSection() {
-            document.getElementById('aboutSection').classList.add('active');
-            document.getElementById('marketersView').style.display = 'none';
-            initScrollObserver();
+        function saveToolsToStorage() {
+            localStorage.setItem('meros_tools', JSON.stringify(operationalTools));
         }
 
-        function showMarketersSection() {
-            document.getElementById('aboutSection').classList.remove('active');
-            document.getElementById('marketersView').style.display = 'flex';
+        let selectedFilterValue = 'all';
+
+        // دالة الدخول للمنظومة بمجرد النقر على الواجهة الافتتاحية
+        function enterPlatform() {
+            const hero = document.getElementById('landingHero');
+            hero.classList.add('hidden-hero');
+            showSection('marketersView');
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.classList.add('active');
+            }
+
+            if (sectionId === 'aboutSection') {
+                initScrollObserver();
+            } else if (sectionId === 'budgetView') {
+                updateBudgetSummary();
+                triggerBudgetChart();
+            }
         }
 
         function toggleMainMenu() {
             const menu = document.getElementById('fullscreenMenu');
             const icon = document.getElementById('menuToggleIcon');
-            
             const isOpen = menu.classList.contains('open');
             if (isOpen) {
                 closeMainMenu();
@@ -1227,28 +1458,24 @@
 
         function toggleAboutCard(cardId) {
             const itemEl = document.getElementById(cardId);
-            if (itemEl) {
-                itemEl.classList.toggle('active');
-            }
+            if (itemEl) itemEl.classList.toggle('active');
+        }
+
+        function toggleAccordion(id, prefix = 'marketer') {
+            const itemEl = document.getElementById(`${prefix}-item-${id}`);
+            if (itemEl) itemEl.classList.toggle('active');
         }
 
         function initScrollObserver() {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
-            };
-
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('in-view');
-                        
                         if (entry.target.querySelector('#barChart') || entry.target.id === 'about-card-3') {
                             const bars = entry.target.querySelectorAll('.bar-fill');
                             bars.forEach(bar => {
-                                const targetHeight = bar.getAttribute('data-height');
-                                bar.style.height = targetHeight;
+                                bar.style.height = bar.getAttribute('data-height');
                             });
                         }
                     }
@@ -1263,6 +1490,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             initScrollObserver();
             buildMarketersDOM();
+            buildToolsDOM();
         });
 
         function buildMarketersDOM() {
@@ -1273,7 +1501,6 @@
                 const displayName = m.name ? m.name : 'مسوق جديد';
                 const displayValue = m.dealValue ? m.dealValue : 'غير محدد';
                 
-                // معالجة الرقم ليقبل الصيغة السعودية (05...) ويحولها تلقائياً للرابط الدولي الصحيح
                 let whatsappLink = '';
                 if (m.whatsapp) {
                     let rawNum = m.whatsapp.replace(/[^0-9]/g, '');
@@ -1287,7 +1514,7 @@
                 
                 return `
                     <div class="accordion-item" id="marketer-item-${m.id}" data-type="${m.dealType}" data-name="${displayName.toLowerCase()}" data-role="${m.role.toLowerCase()}">
-                        <div class="accordion-header" onclick="toggleAccordion(${m.id})">
+                        <div class="accordion-header" onclick="toggleAccordion(${m.id}, 'marketer')">
                             <div class="marketer-title-area">
                                 <div class="marketer-title-only">${displayName}</div>
                                 <span class="status-badge ${isActive ? 'active' : 'inactive'}">
@@ -1295,9 +1522,7 @@
                                     ${isActive ? 'نشط' : 'غير نشط'}
                                 </span>
                             </div>
-                            <div class="toggle-box">
-                                <i class="fa-solid fa-plus"></i>
-                            </div>
+                            <div class="toggle-box"><i class="fa-solid fa-plus"></i></div>
                         </div>
                         <div class="accordion-content">
                             <div class="content-overflow">
@@ -1324,9 +1549,7 @@
                                         </div>
                                     </div>
                                     <div class="actions-row">
-                                        <button class="delete-btn" onclick="deleteMarketer(event, ${m.id})">
-                                            <i class="fa-regular fa-trash-can"></i> حذف المسوق
-                                        </button>
+                                        <button class="delete-btn" onclick="deleteMarketer(event, ${m.id})"><i class="fa-regular fa-trash-can"></i> حذف المسوق</button>
                                     </div>
                                 </div>
                             </div>
@@ -1334,26 +1557,69 @@
                     </div>
                 `;
             }).join('');
-            updateCounter(marketers.length);
+            document.getElementById('footerCounter').textContent = `إجمالي المسوقين: ${marketers.length}`;
         }
 
-        function toggleAccordion(id) {
-            const itemEl = document.getElementById(`marketer-item-${id}`);
-            if (itemEl) {
-                itemEl.classList.toggle('active');
-            }
+        function buildToolsDOM() {
+            const container = document.getElementById('toolsContainer');
+            container.innerHTML = operationalTools.map(t => {
+                const isActive = t.status === 'active';
+                const displayName = t.name ? t.name : 'أداة جديدة';
+                
+                return `
+                    <div class="accordion-item" id="tool-item-${t.id}" data-name="${displayName.toLowerCase()}">
+                        <div class="accordion-header" onclick="toggleAccordion(${t.id}, 'tool')">
+                            <div class="marketer-title-area">
+                                <div class="marketer-title-only">${displayName}</div>
+                                <span class="status-badge ${isActive ? 'active' : 'inactive'}">
+                                    <span class="status-dot"></span>
+                                    ${isActive ? 'نشط' : 'غير نشط'}
+                                </span>
+                            </div>
+                            <div class="toggle-box"><i class="fa-solid fa-plus"></i></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="content-overflow">
+                                <div class="content-inner">
+                                    <div class="detail-row">
+                                        <span class="detail-label">سعر الاشتراك / التكلفة:</span>
+                                        <span class="detail-value">${t.cost}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">مدة الاشتراك:</span>
+                                        <span class="deal-badge fixed">${t.duration}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">تاريخ التجديد / الاشتراك:</span>
+                                        <span class="detail-value">${t.date}</span>
+                                    </div>
+                                    <div>
+                                        <div class="section-title">رابط موقع الأداة:</div>
+                                        <div class="links-wrap">
+                                            <a href="${t.url}" target="_blank" class="link-chip" style="color:var(--accent-blue-bright);"><i class="fa-solid fa-link"></i><span>زيارة الموقع الإلكتروني</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="actions-row">
+                                        <button class="delete-btn" onclick="deleteTool(event, ${t.id})"><i class="fa-regular fa-trash-can"></i> حذف الأداة</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('toolsFooterCounter').textContent = `إجمالي الأدوات: ${operationalTools.length}`;
         }
 
         function filterMarketersList() {
             const searchVal = document.getElementById('searchInput').value.toLowerCase();
-            const items = document.querySelectorAll('.accordion-item');
+            const items = document.querySelectorAll('#marketersContainer .accordion-item');
             let visibleCount = 0;
 
             items.forEach(item => {
                 const name = item.getAttribute('data-name');
                 const role = item.getAttribute('data-role');
                 const type = item.getAttribute('data-type');
-
                 const matchesSearch = name.includes(searchVal) || role.includes(searchVal);
                 const matchesFilter = selectedFilterValue === 'all' || type === selectedFilterValue;
 
@@ -1364,20 +1630,43 @@
                     item.classList.add('hidden');
                 }
             });
-            updateCounter(visibleCount);
+            document.getElementById('footerCounter').textContent = `إجمالي المسوقين: ${visibleCount}`;
         }
 
-        function updateCounter(count) {
-            document.getElementById('footerCounter').textContent = `إجمالي المسوقين: ${count}`;
+        function filterToolsList() {
+            const searchVal = document.getElementById('searchToolInput').value.toLowerCase();
+            const items = document.querySelectorAll('#toolsContainer .accordion-item');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const name = item.getAttribute('data-name');
+                if (name.includes(searchVal)) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+            document.getElementById('toolsFooterCounter').textContent = `إجمالي الأدوات: ${visibleCount}`;
         }
 
         function deleteMarketer(e, id) {
             e.stopPropagation();
             if (confirm('هل أنت متأكد من حذف هذا المسوق؟')) {
                 marketers = marketers.filter(m => m.id !== id);
-                saveMarketersToStorage(); // تحديث التخزين الدائم
+                saveMarketersToStorage();
                 buildMarketersDOM();
                 filterMarketersList();
+            }
+        }
+
+        function deleteTool(e, id) {
+            e.stopPropagation();
+            if (confirm('هل أنت متأكد من حذف هذه الأداة؟')) {
+                operationalTools = operationalTools.filter(t => t.id !== id);
+                saveToolsToStorage();
+                buildToolsDOM();
+                filterToolsList();
             }
         }
 
@@ -1392,27 +1681,19 @@
         function selectFilterOption(val, text) {
             selectedFilterValue = val;
             document.getElementById('selectedFilterText').textContent = text;
-            
             document.querySelectorAll('.filter-option-item').forEach(el => {
-                if (el.getAttribute('data-value') === val) {
-                    el.classList.add('selected');
-                } else {
-                    el.classList.remove('selected');
-                }
+                if (el.getAttribute('data-value') === val) el.classList.add('selected');
+                else el.classList.remove('selected');
             });
-
             closeFilterModal();
             filterMarketersList();
         }
 
-        function openAddModal() {
-            document.getElementById('addModalOverlay').classList.add('active');
-        }
+        function openAddModal() { document.getElementById('addModalOverlay').classList.add('active'); }
+        function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('active'); document.getElementById('addForm').reset(); }
 
-        function closeAddModal() {
-            document.getElementById('addModalOverlay').classList.remove('active');
-            document.getElementById('addForm').reset();
-        }
+        function openAddToolModal() { document.getElementById('addToolModalOverlay').classList.add('active'); }
+        function closeAddToolModal() { document.getElementById('addToolModalOverlay').classList.remove('active'); document.getElementById('addToolForm').reset(); }
 
         function handleAddMarketer(e) {
             e.preventDefault();
@@ -1445,10 +1726,41 @@
             if(tiktok) newMarketer.socials.tiktok = tiktok;
 
             marketers.unshift(newMarketer);
-            saveMarketersToStorage(); // حفظ البيانات الجديدة في الذاكرة الدائمة
+            saveMarketersToStorage();
             closeAddModal();
             buildMarketersDOM();
             filterMarketersList();
+        }
+
+        function handleAddTool(e) {
+            e.preventDefault();
+            const newTool = {
+                id: Date.now(),
+                name: document.getElementById('inputToolName').value.trim() || "أداة جديدة",
+                cost: document.getElementById('inputToolCost').value.trim() || "غير محدد",
+                duration: document.getElementById('inputToolDuration').value.trim() || "شهري",
+                date: document.getElementById('inputToolDate').value.trim() || "2026/05/01",
+                status: document.getElementById('inputToolStatus').value,
+                url: document.getElementById('inputToolUrl').value.trim() || "#"
+            };
+            operationalTools.unshift(newTool);
+            saveToolsToStorage();
+            closeAddToolModal();
+            buildToolsDOM();
+            filterToolsList();
+        }
+
+        function updateBudgetSummary() {
+            document.getElementById('totalMarketersSpend').textContent = `${marketers.length * 1500} ريال تقريبي`;
+            document.getElementById('totalToolsSpend').textContent = `${operationalTools.length * 200} ريال تقريبي`;
+        }
+
+        function triggerBudgetChart() {
+            setTimeout(() => {
+                document.querySelectorAll('#budgetView .bar-fill').forEach(bar => {
+                    bar.style.height = bar.getAttribute('data-height');
+                });
+            }, 100);
         }
     </script>
 </body>
