@@ -696,7 +696,7 @@
             color: var(--text-main);
         }
 
-        /* تنسيق تفاصيل الاتفاق بشكل شريحة مرتبة ودقيقة للأيقونات والنصوص */
+        /* تنسيق تفاصيل الاتفاق بدقة وأناقة */
         .deal-badge {
             font-size: 0.85rem;
             font-weight: 700;
@@ -714,7 +714,7 @@
         .deal-part {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .section-title {
@@ -1377,10 +1377,19 @@
                         <option value="both">مبلغ ثابت + نسبة</option>
                     </select>
                 </div>
-                <div class="form-group" id="dealValueGroup">
-                    <label id="dealValueLabel">تفاصيل الاتفاق</label>
-                    <input type="text" id="inputValue" placeholder="مثال: 2000 + 70%" required>
+
+                <!-- خانة المبلغ الثابت -->
+                <div class="form-group" id="fixedValueGroup">
+                    <label>المبلغ الثابت</label>
+                    <input type="text" id="inputFixedValue" placeholder="مثال: 2000">
                 </div>
+
+                <!-- خانة النسبة (تكتب الرقم مجرداً مثل 70) -->
+                <div class="form-group" id="percentValueGroup">
+                    <label>نسبة العمولة (اكتب الرقم مجرداً مثل: 70)</label>
+                    <input type="text" id="inputPercentValue" placeholder="مثال: 70">
+                </div>
+
                 <div class="form-group">
                     <label>تاريخ انتهاء الاتفاقية (لتحديد حالة النشاط تلقائياً)</label>
                     <input type="date" id="inputEndDate" required>
@@ -1456,7 +1465,8 @@
                 role: "مؤثر / صانع محتوى",
                 endDate: "2026-06-02",
                 dealType: "both",
-                dealValue: "2000 + 70%",
+                fixedVal: "2000",
+                percentVal: "70",
                 whatsapp: "0500000000",
                 socials: { snapchat: "abdullah_tech", instagram: "abdullah_t", x: "abdullah_tech", tiktok: "abdullah_tech" }
             },
@@ -1466,7 +1476,8 @@
                 role: "مشهور / شخصية عامة",
                 endDate: "2026-05-10",
                 dealType: "percentage",
-                dealValue: "20%",
+                fixedVal: "",
+                percentVal: "20",
                 whatsapp: "0550000000",
                 socials: { snapchat: "muna_fashion", instagram: "muna_style" }
             },
@@ -1476,7 +1487,8 @@
                 role: "مؤثر / صانع محتوى",
                 endDate: "2026-01-01",
                 dealType: "fixed",
-                dealValue: "3000",
+                fixedVal: "3000",
+                percentVal: "",
                 whatsapp: "",
                 socials: { snapchat: "fahad_reviews", x: "fahad_rev" }
             }
@@ -1649,6 +1661,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             initScrollObserver();
+            updateDealInputs();
             buildMarketersDOM();
             buildToolsDOM();
         });
@@ -1667,69 +1680,61 @@
             }
         }
 
+        /* إدارة إظهار وإخفاء الحقول تلقائياً حسب نوع الاتفاقية المختار */
         function updateDealInputs() {
             const type = document.getElementById('inputDealType').value;
-            const label = document.getElementById('dealValueLabel');
-            const input = document.getElementById('inputValue');
+            const fixedGroup = document.getElementById('fixedValueGroup');
+            const percentGroup = document.getElementById('percentValueGroup');
             
             if(type === 'percentage') {
-                label.textContent = 'نسبة العمولة (%)';
-                input.placeholder = 'مثال: 70%';
+                percentGroup.style.display = 'flex';
+                fixedGroup.style.display = 'none';
             } else if(type === 'fixed') {
-                label.textContent = 'المبلغ الثابت';
-                input.placeholder = 'مثال: 2000';
+                percentGroup.style.display = 'none';
+                fixedGroup.style.display = 'flex';
             } else if(type === 'both') {
-                label.textContent = 'المبلغ الثابت والنسبة معاً';
-                input.placeholder = 'مثال: 2000 + 70%';
+                percentGroup.style.display = 'flex';
+                fixedGroup.style.display = 'flex';
             }
         }
 
-        /* دالة هندسة وعرض الاتفاق بدقة متناهية وترتيب الأيقونات حسب النوع */
-        function renderDealBadgeHtml(dealType, rawVal) {
-            if (!rawVal) return `<span class="deal-badge">غير محدد</span>`;
-            
-            let val = rawVal.trim().replace(/ريال/g, '').trim();
+        /* دالة هندسة وعرض الاتفاق برمجياً بدون تكرار رموز النسبة أو الأيقونات */
+        function renderDealBadgeHtml(m) {
+            const dealType = m.dealType || 'fixed';
+            const fixedVal = m.fixedVal ? m.fixedVal.replace(/ريال/g, '').trim() : '';
+            // تنظيف أي رمز % قديم أو إضافي ليتم وضعه برمجياً بأيقونة FontAwesome مرة واحدة فقط
+            const percentVal = m.percentVal ? m.percentVal.replace(/%/g, '').trim() : '';
 
-            if (dealType === 'percentage' || (val.includes('%') && !val.includes('+'))) {
-                let cleanPercent = val.replace('%', '').trim();
+            if (dealType === 'percentage' && percentVal) {
                 return `
                     <span class="deal-badge">
-                        <span class="deal-part"><i class="fa-solid fa-percent"></i>${cleanPercent}</span>
-                    </span>
-                `;
-            } 
-            else if (dealType === 'fixed' || (!val.includes('%') && !val.includes('+'))) {
-                return `
-                    <span class="deal-badge">
-                        <span class="deal-part">${val}<i class="fa-solid fa-money-bill-wave"></i></span>
-                    </span>
-                `;
-            } 
-            else {
-                // الخيار المركب: مبلغ ثابت + نسبة
-                let parts = val.split('+');
-                let firstPart = parts[0] ? parts[0].trim() : '';
-                let secondPart = parts[1] ? parts[1].trim() : '';
-
-                let fixedVal = '';
-                let percentVal = '';
-
-                if (firstPart.includes('%')) {
-                    percentVal = firstPart.replace('%', '').trim();
-                    fixedVal = secondPart.replace('%', '').trim();
-                } else {
-                    fixedVal = firstPart.replace('%', '').trim();
-                    percentVal = secondPart.replace('%', '').trim();
-                }
-
-                return `
-                    <span class="deal-badge">
-                        <span class="deal-part">${fixedVal} <i class="fa-solid fa-money-bill-wave"></i></span>
-                        <span>+</span>
                         <span class="deal-part"><i class="fa-solid fa-percent"></i>${percentVal}</span>
                     </span>
                 `;
+            } 
+            else if (dealType === 'fixed' && fixedVal) {
+                return `
+                    <span class="deal-badge">
+                        <span class="deal-part">${fixedVal}<i class="fa-solid fa-money-bill-wave"></i></span>
+                    </span>
+                `;
+            } 
+            else if (dealType === 'both') {
+                let htmlParts = [];
+                if (fixedVal) {
+                    htmlParts.push(`<span class="deal-part">${fixedVal}<i class="fa-solid fa-money-bill-wave"></i></span>`);
+                }
+                if (percentVal) {
+                    htmlParts.push(`<span class="deal-part"><i class="fa-solid fa-percent"></i>${percentVal}</span>`);
+                }
+                return `
+                    <span class="deal-badge">
+                        ${htmlParts.join('<span>+</span>')}
+                    </span>
+                `;
             }
+            
+            return `<span class="deal-badge">غير محدد</span>`;
         }
 
         function buildMarketersDOM() {
@@ -1737,7 +1742,7 @@
             container.innerHTML = marketers.map(m => {
                 const isActive = checkMarketerActiveStatus(m.endDate);
                 const displayName = m.name ? m.name : 'مسوق جديد';
-                const dealHtml = renderDealBadgeHtml(m.dealType, m.dealValue);
+                const dealHtml = renderDealBadgeHtml(m);
                 const displayDate = m.endDate ? m.endDate : 'غير محدد';
                 
                 let whatsappLink = '';
@@ -1991,7 +1996,8 @@
             const name = document.getElementById('inputName').value.trim();
             const role = document.getElementById('inputRole').value;
             const dealType = document.getElementById('inputDealType').value;
-            const val = document.getElementById('inputValue').value.trim();
+            const fixedVal = document.getElementById('inputFixedValue').value.trim();
+            const percentVal = document.getElementById('inputPercentValue').value.trim();
             const endDate = document.getElementById('inputEndDate').value;
             
             const whatsapp = document.getElementById('inputWhatsapp').value.trim();
@@ -2005,8 +2011,9 @@
                 name: name || "مسوق جديد",
                 role: role,
                 dealType: dealType,
+                fixedVal: fixedVal,
+                percentVal: percentVal,
                 endDate: endDate || new Date().toISOString().slice(0, 10),
-                dealValue: val || "2000 + 70%",
                 whatsapp: whatsapp,
                 socials: {}
             };
