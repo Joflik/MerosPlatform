@@ -30,10 +30,12 @@
             --purple-bg: rgba(139, 92, 246, 0.12);
             --purple-border: rgba(139, 92, 246, 0.25);
             --accent-green: #10b981;
+            --green-card-bg: rgba(16, 185, 129, 0.12);
             --green-bg: rgba(16, 185, 129, 0.12);
             --green-border: rgba(16, 185, 129, 0.25);
             --danger-red: #ef4444;
-            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --danger-border: rgba(239, 68, 68, 0.4);
             --nav-bg: rgba(10, 10, 12, 0.95);
             --font-instrument-serif: "Instrument Serif", Georgia, serif;
             --font-family-base: 'Thmanyah Serif', 'Tajawal', sans-serif;
@@ -598,63 +600,26 @@
         }
 
         /* ------------------------------------------------------------- */
-        /* تعديل قسم الأدوات التشغيلية حصرياً: تدرج متحرك ورموز ASCII أطراف البطاقة */
+        /* بطاقات الأدوات التشغيلية بدون أي إطار أو حدود نهائياً */
         /* ------------------------------------------------------------- */
         .ai-tool-card {
-            position: relative;
-            background: rgba(13, 15, 18, 0.9);
-            border-radius: 16px;
-            padding: 2px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            border-bottom: none !important;
+            background: transparent;
+            border-bottom: none;
+            border-radius: 12px;
+            padding: 0 8px;
+            transition: all 0.3s ease;
         }
 
-        .ai-tool-card::before {
-            content: '';
-            position: absolute;
-            inset: -50%;
-            background: conic-gradient(from 0deg at 50% 50%, var(--card-glow-1, #62b6cb), var(--card-glow-2, #1b4965), var(--card-glow-1, #62b6cb));
-            animation: rotateGlow 6s linear infinite;
-            z-index: 1;
+        .ai-tool-card.active-card {
+            background: var(--green-card-bg);
+            border-bottom: none;
         }
 
-        @keyframes rotateGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .ai-tool-card.expired-soon {
+            background: var(--danger-bg);
+            border-bottom: none;
         }
 
-        .ai-tool-inner {
-            position: relative;
-            background: #000000;
-            border-radius: 15px;
-            padding: 4px 16px 4px 4px;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .ai-tool-card::after {
-            content: "+ - * / # & $ % 01 10 AI CLD GPT MID";
-            position: absolute;
-            top: 4px; left: 10px; right: 10px; bottom: 4px;
-            font-family: monospace;
-            font-size: 0.55rem;
-            color: var(--card-glow-1, #62b6cb);
-            opacity: 0.05;
-            white-space: nowrap;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 2;
-            animation: asciiScroll 12s linear infinite;
-        }
-
-        @keyframes asciiScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* تنسيق أيقونة الموقع الديناميكية في بطاقات الأدوات */
         .site-favicon {
             width: 26px;
             height: 26px;
@@ -673,11 +638,12 @@
             letter-spacing: -0.3px;
         }
 
+        /* تنسيق حالة المسوق الدائرية المرتبطة بالوقت (أخضر للنشط، أحمر لغير النشط) */
         .status-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 700;
@@ -700,12 +666,13 @@
         }
 
         .status-badge.inactive {
-            background: rgba(148, 163, 184, 0.12);
-            color: var(--text-sub);
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: var(--danger-bg);
+            color: var(--danger-red);
+            border: 1px solid var(--danger-border);
         }
         .status-badge.inactive .status-dot {
-            background-color: var(--text-sub);
+            background-color: var(--danger-red);
+            box-shadow: 0 0 8px var(--danger-red);
         }
 
         .detail-row {
@@ -739,12 +706,6 @@
             gap: 6px;
         }
 
-        .deal-badge.percentage {
-            background: var(--purple-bg);
-            color: var(--accent-purple);
-            border: 1px solid var(--purple-border);
-        }
-
         .deal-badge.fixed {
             background: var(--green-bg);
             color: var(--accent-green);
@@ -758,13 +719,46 @@
             margin-bottom: 8px;
         }
 
-        .social-links, .links-wrap {
+        /* تنسيق أزرار التواصل الاجتماعي بالإطارات والأيقونات والترتيب الأنيق */
+        .social-links {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
         }
 
-        .social-chip, .link-chip {
+        .social-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .social-chip:hover {
+            border-color: var(--accent-blue-bright);
+            transform: translateY(-2px);
+        }
+
+        .social-chip.whatsapp { color: #25d366; border-color: rgba(37, 211, 102, 0.25); background: rgba(37, 211, 102, 0.08); }
+        .social-chip.snapchat { color: #fffc00; border-color: rgba(255, 252, 0, 0.25); background: rgba(255, 252, 0, 0.08); }
+        .social-chip.instagram { color: #e1306c; border-color: rgba(225, 48, 108, 0.25); background: rgba(225, 48, 108, 0.08); }
+        .social-chip.x-twitter { color: #ffffff; border-color: rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.08); }
+        .social-chip.tiktok { color: #6ee7b7; border-color: rgba(110, 231, 183, 0.25); background: rgba(110, 231, 183, 0.08); }
+
+        .links-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .link-chip {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -779,16 +773,10 @@
             transition: all 0.2s ease;
         }
 
-        .social-chip:hover, .link-chip:hover {
+        .link-chip:hover {
             border-color: var(--accent-blue-bright);
             transform: translateY(-2px);
         }
-
-        .social-chip.snapchat i { color: #FFFC00; }
-        .social-chip.instagram i { color: #E1306C; }
-        .social-chip.x-twitter i { color: #ffffff; }
-        .social-chip.tiktok i { color: #00f2fe; }
-        .social-chip.whatsapp i { color: #25D366; }
 
         .actions-row {
             display: flex;
@@ -847,7 +835,6 @@
             color: var(--text-main);
         }
 
-        /* شريط أدوات البيانات (تصدير واستيراد) */
         .data-sync-bar {
             display: flex;
             gap: 10px;
@@ -878,7 +865,6 @@
             background: rgba(27, 73, 101, 0.15);
         }
 
-        /* النوافذ المنبثقة والمودلز */
         .modal-overlay {
             position: fixed;
             top: 0; right: 0; bottom: 0; left: 0;
@@ -1351,7 +1337,7 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة مسوق جديد -->
+    <!-- نافذة إضافة مسوق جديد (مع تاريخ انتهاء الاتفاقية) -->
     <div class="modal-overlay" id="addModalOverlay">
         <div class="modal">
             <div class="modal-header">
@@ -1375,13 +1361,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>حالة المسوق</label>
-                    <select id="inputStatus">
-                        <option value="active">نشط</option>
-                        <option value="inactive">غير نشط</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label>نوع الاتفاقية</label>
                     <select id="inputType">
                         <option value="percentage">عمولة بالنسبة (%)</option>
@@ -1391,6 +1370,10 @@
                 <div class="form-group">
                     <label>تفاصيل الاتفاق</label>
                     <input type="text" id="inputValue" placeholder="مثال: 15% أو 2500 ريال" required>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ انتهاء الاتفاقية (لتحديد حالة النشاط تلقائياً)</label>
+                    <input type="date" id="inputEndDate" required>
                 </div>
 
                 <hr style="border:0; border-top:1px solid var(--card-border); margin: 6px 0;">
@@ -1443,15 +1426,8 @@
                     <input type="text" id="inputToolDuration" placeholder="مثال: شهري / سنوي" required>
                 </div>
                 <div class="form-group">
-                    <label>تاريخ الاشتراك / التجديد</label>
-                    <input type="text" id="inputToolDate" placeholder="مثال: 2026/05/01" required>
-                </div>
-                <div class="form-group">
-                    <label>حالة الأداة</label>
-                    <select id="inputToolStatus">
-                        <option value="active">نشط</option>
-                        <option value="inactive">متوقف / منتهي</option>
-                    </select>
+                    <label>تاريخ التجديد القادم</label>
+                    <input type="date" id="inputToolEndDate" required>
                 </div>
                 <div class="form-group">
                     <label>رابط موقع الأداة (URL) لجلب الأيقونة والهوية تلقائياً</label>
@@ -1468,7 +1444,7 @@
                 id: 1,
                 name: "عبدالله التقني",
                 role: "مؤثر / صانع محتوى",
-                status: "active",
+                endDate: "2026-06-02",
                 dealType: "fixed",
                 dealValue: "1,500 ريال + 10%",
                 whatsapp: "0500000000",
@@ -1478,7 +1454,7 @@
                 id: 2,
                 name: "منيرة الأزياء",
                 role: "مشهور / شخصية عامة",
-                status: "active",
+                endDate: "2026-05-10",
                 dealType: "percentage",
                 dealValue: "% 20 عمولة مبيعات",
                 whatsapp: "0550000000",
@@ -1488,7 +1464,7 @@
                 id: 3,
                 name: "فهد للمراجعات",
                 role: "مؤثر / صانع محتوى",
-                status: "inactive",
+                endDate: "2026-01-01",
                 dealType: "fixed",
                 dealValue: "3,000 ريال / تغطية",
                 whatsapp: "",
@@ -1499,20 +1475,26 @@
         let defaultTools = [
             {
                 id: 1,
-                name: "ChatGPT Plus (OpenAI)",
+                name: "Claude (Anthropic)",
                 cost: "280 ريال",
                 duration: "شهري",
-                date: "2026/05/01",
-                status: "active",
-                url: "https://chatgpt.com"
+                date: "2026-06-02",
+                url: "https://claude.ai"
             },
             {
                 id: 2,
+                name: "ChatGPT Plus (OpenAI)",
+                cost: "280 ريال",
+                duration: "شهري",
+                date: "2026-05-10",
+                url: "https://chatgpt.com"
+            },
+            {
+                id: 3,
                 name: "Midjourney AI",
                 cost: "112 ريال",
                 duration: "شهري",
-                date: "2026/05/15",
-                status: "active",
+                date: "2026-05-05",
                 url: "https://www.midjourney.com"
             }
         ];
@@ -1528,7 +1510,6 @@
             localStorage.setItem('meros_tools', JSON.stringify(operationalTools));
         }
 
-        // دوال التصدير والاستيراد والمزامنة المحلية
         function exportDataJson() {
             const dataToExport = {
                 marketers: marketers,
@@ -1579,7 +1560,6 @@
 
         let selectedFilterValue = 'all';
 
-        // دالة الدخول للمنظومة بمجرد النقر على الواجهة الافتتاحية
         function enterPlatform() {
             const hero = document.getElementById('landingHero');
             hero.classList.add('hidden-hero');
@@ -1663,13 +1643,31 @@
             buildToolsDOM();
         });
 
+        /* دالة لحساب حالة المسوق بناءً على تاريخ انتهاء الاتفاقية ومقارنته بالزمن الحقيقي */
+        function checkMarketerActiveStatus(endDateString) {
+            try {
+                if (!endDateString) return false;
+                const now = new Date();
+                const targetDate = new Date(endDateString);
+                now.setHours(0, 0, 0, 0);
+                targetDate.setHours(0, 0, 0, 0);
+                return targetDate >= now;
+            } catch (e) {
+                return false;
+            }
+        }
+
         function buildMarketersDOM() {
             const container = document.getElementById('marketersContainer');
             container.innerHTML = marketers.map(m => {
                 const isPercentage = m.dealType === 'percentage';
-                const isActive = m.status === 'active';
+                
+                // تحديد الحالة تلقائياً بناءً على التاريخ
+                const isActive = checkMarketerActiveStatus(m.endDate);
+                
                 const displayName = m.name ? m.name : 'مسوق جديد';
                 const displayValue = m.dealValue ? m.dealValue : 'غير محدد';
+                const displayDate = m.endDate ? m.endDate : 'غير محدد';
                 
                 let whatsappLink = '';
                 if (m.whatsapp) {
@@ -1708,6 +1706,10 @@
                                             ${displayValue}
                                         </span>
                                     </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">تاريخ انتهاء الاتفاقية:</span>
+                                        <span class="detail-value" style="${!isActive ? 'color: var(--danger-red);' : ''}">${displayDate}</span>
+                                    </div>
                                     <div>
                                         <div class="section-title">التواصل والحسابات الرسمية:</div>
                                         <div class="social-links">
@@ -1730,7 +1732,6 @@
             document.getElementById('footerCounter').textContent = `إجمالي المسوقين: ${marketers.length}`;
         }
 
-        // استخراج النطاق (Domain) لجلب الـ Favicon والهوية البصرية تلقائياً
         function getDomainFromUrl(url) {
             try {
                 const parsed = new URL(url.startsWith('http') ? url : 'https://' + url);
@@ -1740,69 +1741,89 @@
             }
         }
 
-        /* دالة تحديد ألوان التدرج المتحرك حسب هوية كل أداة AI */
-        function getBrandGlowColors(name, url) {
-            const lower = (name + " " + url).toLowerCase();
-            if (lower.includes('claude') || lower.includes('anthropic')) {
-                return { c1: '#ff7b00', c2: '#ffcc00' }; // برتقالي وأصفر لـ Claude
-            } else if (lower.includes('chatgpt') || lower.includes('openai')) {
-                return { c1: '#10a37f', c2: '#ffffff' }; // أخضر وأبيض لـ OpenAI
-            } else if (lower.includes('midjourney')) {
-                return { c1: '#2255ff', c2: '#9933ff' }; // أزرق وبنفسجي لـ Midjourney
-            } else if (lower.includes('github') || lower.includes('copilot')) {
-                return { c1: '#f0f6fc', c2: '#8957e5' }; // أبيض وبنفسجي لـ GitHub
-            } else {
-                return { c1: '#62b6cb', c2: '#1b4965' }; // افتراضي (سماوي وأزرق)
-            }
+        function checkSubscriptionStatus(endDateString) {
+            try {
+                const now = new Date();
+                const targetDate = new Date(endDateString);
+                now.setHours(0, 0, 0, 0);
+                targetDate.setHours(0, 0, 0, 0);
+                const diffTime = targetDate - now;
+                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays <= 5) {
+                    return { isSoonOrExpired: true, daysLeft: diffDays };
+                }
+            } catch (e) {}
+            return { isSoonOrExpired: false, daysLeft: null };
         }
 
         function buildToolsDOM() {
             const container = document.getElementById('toolsContainer');
             container.innerHTML = operationalTools.map(t => {
-                const isActive = t.status === 'active';
                 const displayName = t.name ? t.name : 'أداة جديدة';
                 const domain = getDomainFromUrl(t.url);
                 const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-                const colors = getBrandGlowColors(t.name, t.url);
+                
+                const checkSub = checkSubscriptionStatus(t.date);
+                const isWarning = checkSub.isSoonOrExpired;
+                
+                let daysText = '';
+                try {
+                    const now = new Date();
+                    const targetDate = new Date(t.date);
+                    now.setHours(0,0,0,0);
+                    targetDate.setHours(0,0,0,0);
+                    const dDays = Math.round((targetDate - now) / (1000 * 60 * 60 * 24));
+                    if (dDays < 0) {
+                        daysText = `منتهي (منذ ${Math.abs(dDays)} يوم)`;
+                    } else if (dDays === 0) {
+                        daysText = `ينتهي اليوم!`;
+                    } else {
+                        daysText = `باقي ${dDays} أيام`;
+                    }
+                } catch(e) {
+                    daysText = 'غير محدد';
+                }
+                
+                const cardClass = isWarning ? 'expired-soon' : 'active-card';
                 
                 return `
-                    <div class="ai-tool-card" id="tool-item-${t.id}" style="--card-glow-1: ${colors.c1}; --card-glow-2: ${colors.c2};" data-name="${displayName.toLowerCase()}">
-                        <div class="ai-tool-inner">
-                            <div class="accordion-header" onclick="toggleAccordion(${t.id}, 'tool')">
-                                <div class="marketer-title-area">
-                                    <img src="${faviconUrl}" class="site-favicon" alt="icon" onerror="this.src='https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg'">
-                                    <div class="marketer-title-only">${displayName}</div>
-                                    <span class="status-badge ${isActive ? 'active' : 'inactive'}">
-                                        <span class="status-dot"></span>
-                                        ${isActive ? 'نشط' : 'غير نشط'}
-                                    </span>
-                                </div>
-                                <div class="toggle-box" style="width:36px; height:36px; border-radius:8px;"><i class="fa-solid fa-plus" style="font-size:0.9rem;"></i></div>
+                    <div class="ai-tool-card ${cardClass}" id="tool-item-${t.id}" data-name="${displayName.toLowerCase()}">
+                        <div class="accordion-header" onclick="toggleAccordion(${t.id}, 'tool')">
+                            <div class="marketer-title-area">
+                                <img src="${faviconUrl}" class="site-favicon" alt="icon" onerror="this.src='https://i.ibb.co/BHf4Tdgt/Picsart-26-10-27-11-38-29-740.jpg'">
+                                <div class="marketer-title-only">${displayName}</div>
                             </div>
-                            <div class="accordion-content">
-                                <div class="content-overflow">
-                                    <div class="content-inner">
-                                        <div class="detail-row">
-                                            <span class="detail-label">سعر الاشتراك / التكلفة:</span>
-                                            <span class="detail-value">${t.cost}</span>
+                            <div class="toggle-box" style="width:36px; height:36px; border-radius:8px;"><i class="fa-solid fa-plus" style="font-size:0.9rem;"></i></div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="content-overflow">
+                                <div class="content-inner">
+                                    <div class="detail-row">
+                                        <span class="detail-label">سعر الاشتراك / التكلفة:</span>
+                                        <span class="detail-value">${t.cost}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">مدة الاشتراك:</span>
+                                        <span class="deal-badge fixed">${t.duration}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">تاريخ التجديد القادم:</span>
+                                        <span class="detail-value" style="${isWarning ? 'color: var(--danger-red); font-weight:900;' : ''}">${t.date}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">العد التنازلي للاشتراك:</span>
+                                        <span class="detail-value" style="color: ${isWarning ? 'var(--danger-red)' : 'var(--accent-green)'}; font-weight:800;">
+                                            ${daysText}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <div class="section-title">رابط موقع الأداة:</div>
+                                        <div class="links-wrap">
+                                            <a href="${t.url}" target="_blank" class="link-chip" style="color:var(--accent-blue-bright);"><i class="fa-solid fa-link"></i><span>زيارة موقع ${domain}</span></a>
                                         </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">مدة الاشتراك:</span>
-                                            <span class="deal-badge fixed">${t.duration}</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">تاريخ التجديد / الاشتراك:</span>
-                                            <span class="detail-value">${t.date}</span>
-                                        </div>
-                                        <div>
-                                            <div class="section-title">رابط موقع الأداة:</div>
-                                            <div class="links-wrap">
-                                                <a href="${t.url}" target="_blank" class="link-chip" style="color:var(--accent-blue-bright);"><i class="fa-solid fa-link"></i><span>زيارة موقع ${domain}</span></a>
-                                            </div>
-                                        </div>
-                                        <div class="actions-row">
-                                            <button class="delete-btn" onclick="deleteTool(event, ${t.id})"><i class="fa-regular fa-trash-can"></i> حذف الأداة</button>
-                                        </div>
+                                    </div>
+                                    <div class="actions-row">
+                                        <button class="delete-btn" onclick="deleteTool(event, ${t.id})"><i class="fa-regular fa-trash-can"></i> حذف الأداة</button>
                                     </div>
                                 </div>
                             </div>
@@ -1901,9 +1922,9 @@
             e.preventDefault();
             const name = document.getElementById('inputName').value.trim();
             const role = document.getElementById('inputRole').value;
-            const status = document.getElementById('inputStatus').value;
             const type = document.getElementById('inputType').value;
             const val = document.getElementById('inputValue').value.trim();
+            const endDate = document.getElementById('inputEndDate').value;
             
             const whatsapp = document.getElementById('inputWhatsapp').value.trim();
             const snap = document.getElementById('inputSnap').value.trim();
@@ -1915,7 +1936,7 @@
                 id: Date.now(),
                 name: name || "مسوق جديد",
                 role: role,
-                status: status,
+                endDate: endDate || new Date().toISOString().slice(0, 10),
                 dealType: type,
                 dealValue: val || "غير محدد",
                 whatsapp: whatsapp,
@@ -1936,13 +1957,14 @@
 
         function handleAddTool(e) {
             e.preventDefault();
+            const endDate = document.getElementById('inputToolEndDate').value;
+
             const newTool = {
                 id: Date.now(),
                 name: document.getElementById('inputToolName').value.trim() || "أداة جديدة",
                 cost: document.getElementById('inputToolCost').value.trim() || "غير محدد",
                 duration: document.getElementById('inputToolDuration').value.trim() || "شهري",
-                date: document.getElementById('inputToolDate').value.trim() || "2026/05/01",
-                status: document.getElementById('inputToolStatus').value,
+                date: endDate || new Date().toISOString().slice(0, 10),
                 url: document.getElementById('inputToolUrl').value.trim() || "https://example.com"
             };
             operationalTools.unshift(newTool);
