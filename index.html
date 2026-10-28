@@ -696,17 +696,25 @@
             color: var(--text-main);
         }
 
+        /* تنسيق تفاصيل الاتفاق بشكل شريحة مرتبة ودقيقة للأيقونات والنصوص */
         .deal-badge {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 700;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 8px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: var(--green-bg);
             color: var(--accent-green);
             border: 1px solid var(--green-border);
+            direction: rtl;
+        }
+
+        .deal-part {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .section-title {
@@ -1371,7 +1379,7 @@
                 </div>
                 <div class="form-group" id="dealValueGroup">
                     <label id="dealValueLabel">تفاصيل الاتفاق</label>
-                    <input type="text" id="inputValue" placeholder="مثال: 15%" required>
+                    <input type="text" id="inputValue" placeholder="مثال: 2000 + 70%" required>
                 </div>
                 <div class="form-group">
                     <label>تاريخ انتهاء الاتفاقية (لتحديد حالة النشاط تلقائياً)</label>
@@ -1448,7 +1456,7 @@
                 role: "مؤثر / صانع محتوى",
                 endDate: "2026-06-02",
                 dealType: "both",
-                dealValue: "1,500 + 10%",
+                dealValue: "2000 + 70%",
                 whatsapp: "0500000000",
                 socials: { snapchat: "abdullah_tech", instagram: "abdullah_t", x: "abdullah_tech", tiktok: "abdullah_tech" }
             },
@@ -1468,7 +1476,7 @@
                 role: "مؤثر / صانع محتوى",
                 endDate: "2026-01-01",
                 dealType: "fixed",
-                dealValue: "3,000",
+                dealValue: "3000",
                 whatsapp: "",
                 socials: { snapchat: "fahad_reviews", x: "fahad_rev" }
             }
@@ -1665,14 +1673,62 @@
             const input = document.getElementById('inputValue');
             
             if(type === 'percentage') {
-                label.textContent = 'نسبة العمولة';
-                input.placeholder = 'مثال: 15%';
+                label.textContent = 'نسبة العمولة (%)';
+                input.placeholder = 'مثال: 70%';
             } else if(type === 'fixed') {
                 label.textContent = 'المبلغ الثابت';
-                input.placeholder = 'مثال: 2,500';
+                input.placeholder = 'مثال: 2000';
             } else if(type === 'both') {
-                label.textContent = 'المبلغ الثابت والنسبة';
-                input.placeholder = 'مثال: 1,500 + 10%';
+                label.textContent = 'المبلغ الثابت والنسبة معاً';
+                input.placeholder = 'مثال: 2000 + 70%';
+            }
+        }
+
+        /* دالة هندسة وعرض الاتفاق بدقة متناهية وترتيب الأيقونات حسب النوع */
+        function renderDealBadgeHtml(dealType, rawVal) {
+            if (!rawVal) return `<span class="deal-badge">غير محدد</span>`;
+            
+            let val = rawVal.trim().replace(/ريال/g, '').trim();
+
+            if (dealType === 'percentage' || (val.includes('%') && !val.includes('+'))) {
+                let cleanPercent = val.replace('%', '').trim();
+                return `
+                    <span class="deal-badge">
+                        <span class="deal-part"><i class="fa-solid fa-percent"></i>${cleanPercent}</span>
+                    </span>
+                `;
+            } 
+            else if (dealType === 'fixed' || (!val.includes('%') && !val.includes('+'))) {
+                return `
+                    <span class="deal-badge">
+                        <span class="deal-part">${val}<i class="fa-solid fa-money-bill-wave"></i></span>
+                    </span>
+                `;
+            } 
+            else {
+                // الخيار المركب: مبلغ ثابت + نسبة
+                let parts = val.split('+');
+                let firstPart = parts[0] ? parts[0].trim() : '';
+                let secondPart = parts[1] ? parts[1].trim() : '';
+
+                let fixedVal = '';
+                let percentVal = '';
+
+                if (firstPart.includes('%')) {
+                    percentVal = firstPart.replace('%', '').trim();
+                    fixedVal = secondPart.replace('%', '').trim();
+                } else {
+                    fixedVal = firstPart.replace('%', '').trim();
+                    percentVal = secondPart.replace('%', '').trim();
+                }
+
+                return `
+                    <span class="deal-badge">
+                        <span class="deal-part">${fixedVal} <i class="fa-solid fa-money-bill-wave"></i></span>
+                        <span>+</span>
+                        <span class="deal-part"><i class="fa-solid fa-percent"></i>${percentVal}</span>
+                    </span>
+                `;
             }
         }
 
@@ -1681,7 +1737,7 @@
             container.innerHTML = marketers.map(m => {
                 const isActive = checkMarketerActiveStatus(m.endDate);
                 const displayName = m.name ? m.name : 'مسوق جديد';
-                const displayValue = m.dealValue ? m.dealValue : 'غير محدد';
+                const dealHtml = renderDealBadgeHtml(m.dealType, m.dealValue);
                 const displayDate = m.endDate ? m.endDate : 'غير محدد';
                 
                 let whatsappLink = '';
@@ -1716,10 +1772,7 @@
                                     </div>
                                     <div class="detail-row">
                                         <span class="detail-label">آلية وتفاصيل الاتفاق:</span>
-                                        <span class="deal-badge">
-                                            <i class="fa-solid fa-money-bill-wave"></i>
-                                            ${displayValue}
-                                        </span>
+                                        ${dealHtml}
                                     </div>
                                     <div class="detail-row">
                                         <span class="detail-label">تاريخ انتهاء الاتفاقية:</span>
@@ -1953,7 +2006,7 @@
                 role: role,
                 dealType: dealType,
                 endDate: endDate || new Date().toISOString().slice(0, 10),
-                dealValue: val || "1,500 + 10%",
+                dealValue: val || "2000 + 70%",
                 whatsapp: whatsapp,
                 socials: {}
             };
