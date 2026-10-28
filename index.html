@@ -704,9 +704,6 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .deal-badge.fixed {
             background: var(--green-bg);
             color: var(--accent-green);
             border: 1px solid var(--green-border);
@@ -1325,19 +1322,23 @@
                     <span>جميع الآليات</span>
                     <div class="radio-dot"></div>
                 </div>
-                <div class="filter-option-item" data-value="percentage" onclick="selectFilterOption('percentage', 'نسبة / عمولة')">
-                    <span>نسبة / عمولة</span>
+                <div class="filter-option-item" data-value="percentage" onclick="selectFilterOption('percentage', 'نسبة بالعمولة (%)')">
+                    <span>نسبة بالعمولة (%)</span>
                     <div class="radio-dot"></div>
                 </div>
                 <div class="filter-option-item" data-value="fixed" onclick="selectFilterOption('fixed', 'مبلغ ثابت')">
                     <span>مبلغ ثابت</span>
                     <div class="radio-dot"></div>
                 </div>
+                <div class="filter-option-item" data-value="both" onclick="selectFilterOption('both', 'مبلغ ثابت + نسبة')">
+                    <span>مبلغ ثابت + نسبة</span>
+                    <div class="radio-dot"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة إضافة مسوق جديد (مع تاريخ انتهاء الاتفاقية) -->
+    <!-- نافذة إضافة مسوق جديد -->
     <div class="modal-overlay" id="addModalOverlay">
         <div class="modal">
             <div class="modal-header">
@@ -1362,14 +1363,15 @@
                 </div>
                 <div class="form-group">
                     <label>نوع الاتفاقية</label>
-                    <select id="inputType">
-                        <option value="percentage">عمولة بالنسبة (%)</option>
-                        <option value="fixed">مبلغ ثابت (ريال)</option>
+                    <select id="inputDealType" onchange="updateDealInputs()">
+                        <option value="percentage">نسبة بالعمولة (%)</option>
+                        <option value="fixed">مبلغ ثابت</option>
+                        <option value="both">مبلغ ثابت + نسبة</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>تفاصيل الاتفاق</label>
-                    <input type="text" id="inputValue" placeholder="مثال: 15% أو 2500 ريال" required>
+                <div class="form-group" id="dealValueGroup">
+                    <label id="dealValueLabel">تفاصيل الاتفاق</label>
+                    <input type="text" id="inputValue" placeholder="مثال: 15%" required>
                 </div>
                 <div class="form-group">
                     <label>تاريخ انتهاء الاتفاقية (لتحديد حالة النشاط تلقائياً)</label>
@@ -1445,8 +1447,8 @@
                 name: "عبدالله التقني",
                 role: "مؤثر / صانع محتوى",
                 endDate: "2026-06-02",
-                dealType: "fixed",
-                dealValue: "1,500 ريال + 10%",
+                dealType: "both",
+                dealValue: "1,500 + 10%",
                 whatsapp: "0500000000",
                 socials: { snapchat: "abdullah_tech", instagram: "abdullah_t", x: "abdullah_tech", tiktok: "abdullah_tech" }
             },
@@ -1456,7 +1458,7 @@
                 role: "مشهور / شخصية عامة",
                 endDate: "2026-05-10",
                 dealType: "percentage",
-                dealValue: "% 20 عمولة مبيعات",
+                dealValue: "20%",
                 whatsapp: "0550000000",
                 socials: { snapchat: "muna_fashion", instagram: "muna_style" }
             },
@@ -1466,7 +1468,7 @@
                 role: "مؤثر / صانع محتوى",
                 endDate: "2026-01-01",
                 dealType: "fixed",
-                dealValue: "3,000 ريال / تغطية",
+                dealValue: "3,000",
                 whatsapp: "",
                 socials: { snapchat: "fahad_reviews", x: "fahad_rev" }
             }
@@ -1643,7 +1645,7 @@
             buildToolsDOM();
         });
 
-        /* دالة لحساب حالة المسوق بناءً على تاريخ انتهاء الاتفاقية ومقارنته بالزمن الحقيقي */
+        /* دالة لحساب حالة المسوق تلقائياً بناءً على تاريخ انتهاء الاتفاقية */
         function checkMarketerActiveStatus(endDateString) {
             try {
                 if (!endDateString) return false;
@@ -1657,14 +1659,27 @@
             }
         }
 
+        function updateDealInputs() {
+            const type = document.getElementById('inputDealType').value;
+            const label = document.getElementById('dealValueLabel');
+            const input = document.getElementById('inputValue');
+            
+            if(type === 'percentage') {
+                label.textContent = 'نسبة العمولة';
+                input.placeholder = 'مثال: 15%';
+            } else if(type === 'fixed') {
+                label.textContent = 'المبلغ الثابت';
+                input.placeholder = 'مثال: 2,500';
+            } else if(type === 'both') {
+                label.textContent = 'المبلغ الثابت والنسبة';
+                input.placeholder = 'مثال: 1,500 + 10%';
+            }
+        }
+
         function buildMarketersDOM() {
             const container = document.getElementById('marketersContainer');
             container.innerHTML = marketers.map(m => {
-                const isPercentage = m.dealType === 'percentage';
-                
-                // تحديد الحالة تلقائياً بناءً على التاريخ
                 const isActive = checkMarketerActiveStatus(m.endDate);
-                
                 const displayName = m.name ? m.name : 'مسوق جديد';
                 const displayValue = m.dealValue ? m.dealValue : 'غير محدد';
                 const displayDate = m.endDate ? m.endDate : 'غير محدد';
@@ -1681,7 +1696,7 @@
                 }
                 
                 return `
-                    <div class="accordion-item" id="marketer-item-${m.id}" data-type="${m.dealType}" data-name="${displayName.toLowerCase()}" data-role="${m.role.toLowerCase()}">
+                    <div class="accordion-item" id="marketer-item-${m.id}" data-type="${m.dealType || 'both'}" data-name="${displayName.toLowerCase()}" data-role="${m.role.toLowerCase()}">
                         <div class="accordion-header" onclick="toggleAccordion(${m.id}, 'marketer')">
                             <div class="marketer-title-area">
                                 <div class="marketer-title-only">${displayName}</div>
@@ -1700,9 +1715,9 @@
                                         <span class="detail-value">${m.role}</span>
                                     </div>
                                     <div class="detail-row">
-                                        <span class="detail-label">آلية الاتفاق:</span>
-                                        <span class="deal-badge ${isPercentage ? 'percentage' : 'fixed'}">
-                                            <i class="fa-solid ${isPercentage ? 'fa-percent' : 'fa-money-bill-wave'}"></i>
+                                        <span class="detail-label">آلية وتفاصيل الاتفاق:</span>
+                                        <span class="deal-badge">
+                                            <i class="fa-solid fa-money-bill-wave"></i>
                                             ${displayValue}
                                         </span>
                                     </div>
@@ -1913,7 +1928,7 @@
         }
 
         function openAddModal() { document.getElementById('addModalOverlay').classList.add('active'); }
-        function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('active'); document.getElementById('addForm').reset(); }
+        function closeAddModal() { document.getElementById('addModalOverlay').classList.remove('active'); document.getElementById('addForm').reset(); updateDealInputs(); }
 
         function openAddToolModal() { document.getElementById('addToolModalOverlay').classList.add('active'); }
         function closeAddToolModal() { document.getElementById('addToolModalOverlay').classList.remove('active'); document.getElementById('addToolForm').reset(); }
@@ -1922,7 +1937,7 @@
             e.preventDefault();
             const name = document.getElementById('inputName').value.trim();
             const role = document.getElementById('inputRole').value;
-            const type = document.getElementById('inputType').value;
+            const dealType = document.getElementById('inputDealType').value;
             const val = document.getElementById('inputValue').value.trim();
             const endDate = document.getElementById('inputEndDate').value;
             
@@ -1936,9 +1951,9 @@
                 id: Date.now(),
                 name: name || "مسوق جديد",
                 role: role,
+                dealType: dealType,
                 endDate: endDate || new Date().toISOString().slice(0, 10),
-                dealType: type,
-                dealValue: val || "غير محدد",
+                dealValue: val || "1,500 + 10%",
                 whatsapp: whatsapp,
                 socials: {}
             };
